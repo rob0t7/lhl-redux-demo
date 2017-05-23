@@ -28,42 +28,26 @@ const ProductResults = ({products}) => (
   </table>
 )
 
-class App extends Component {
-  constructor() {
-    super()
-  }
+const App = ({products, showSpinner, handleSubmit}) => (
+  <div style={{width: '80%', margin: '1rem auto'}}>
+    <h1>LCBO Search Redux Demo</h1>
 
-  handleSubmit = (event) => {
-    if (event.key === 'Enter') {
-      this.props.dispatch(fetchProducts(event.target.value))
-    }
-  }
+    <div style={{textAlign: 'center'}}>
+      <input
+          style={{width: '100%', height: '40px', display: 'block'}}
+          type="text"
+          placeholder="Search LCBO Products"
+          onKeyUp={handleSubmit}
+      />
+    </div>
 
-  render() {
-    var { products, showSpinner} = this.props
-    return (
-      <div style={{width: '80%', margin: '1rem auto'}}>
-        <h1>LCBO Search Redux Demo</h1>
+    <div style={{marginTop: '1rem'}}>
+      <ProductResults products={products}/>
+    </div>
 
-        <div style={{textAlign: 'center'}}>
-          <input
-              style={{width: '100%', height: '40px', display: 'block'}}
-              type="text"
-              placeholder="Search LCBO Products"
-              onKeyUp={this.handleSubmit}
-          />
-        </div>
-
-        <div style={{marginTop: '1rem'}}>
-          <ProductResults products={products}/>
-        </div>
-
-        <LoadingSpinner show={showSpinner}/>
-      </div>
-    )
-  }
-}
-
+    <LoadingSpinner show={showSpinner}/>
+  </div>
+)
 
 const mapStateToProps = state => {
   return {
@@ -71,5 +55,14 @@ const mapStateToProps = state => {
     showSpinner: state.isFetching
   }
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleSubmit: (event) => {
+      if (event.key === 'Enter') {
+        dispatch(fetchProducts(event.target.value))
+      }
+    }
+  }
+}
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
